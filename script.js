@@ -42,8 +42,9 @@ function drawWheel() {
 drawWheel();
 
 spinBtn.onclick = () => {
-  if (isSpinning) return;
+  if (isSpinning || spinBtn.disabled) return;
   isSpinning = true;
+  spinBtn.disabled = true;
 
   let randomAngle = Math.floor(Math.random() * 360) + 720; // dua putaran
   let current = 0;
