@@ -26,3 +26,7 @@ button {
   font-size: 24px;
   font-weight: bold;
 }
+button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
