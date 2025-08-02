@@ -1,4 +1,4 @@
-```javascript
+javascript
 document.getElementById('userForm').addEventListener('submit', function(e) {
   e.preventDefault();
   const name = document.getElementById('name').value;
@@ -45,4 +45,3 @@ drawWheel();
 document.getElementById('spinButton').addEventListener('click', function() {const randomIndex = Math.floor(Math.random() * segments.length);
   document.getElementById('result').textContent = `Selamat! Anda mendapatkan: ${segments[randomIndex]}`;
 });
-```
