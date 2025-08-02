@@ -1,21 +1,22 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kejutan Si Lapar</title>
+  <title>Roda Kejutan Dimsum</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>Roda Kejutan Si Lapar</h1>
+    <h1>Roda Kejutan Dimsum</h1>
     <form id="userForm">
       <input type="text" id="name" placeholder="Nama Anda" required />
       <input type="tel" id="phone" placeholder="Nomor HP" required />
       <button type="submit">Mulai</button>
     </form>
     <div id="wheelSection" style="display:none;">
-      <canvas id="wheelCanvas" width="500" height="500"></canvas>
+      <canvas id="wheelCanvas" width="300" height="300"></canvas>
       <button id="spinButton">Putar Roda</button>
       <p id="result"></p>
     </div>
@@ -23,3 +24,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+```
