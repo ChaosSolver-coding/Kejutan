@@ -2,24 +2,18 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Roda Kejutan Dimsum</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spin Hadiah - Si Lapar</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Roda Kejutan Dimsum</h1>
-    <form id="userForm">
-      <input type="text" id="name" placeholder="Nama Anda" required />
-      <input type="tel" id="phone" placeholder="Nomor HP" required />
-      <button type="submit">Mulai</button>
-    </form>
-    <div id="wheelSection" style="display:none;">
-      <canvas id="wheelCanvas" width="300" height="300"></canvas>
-      <button id="spinButton">Putar Roda</button>
-      <p id="result"></p>
-    </div>
+  <h1>Putar Roda Hadiah!</h1>
+  <div class="wheel-container">
+    <canvas id="wheel" width="400" height="400"></canvas>
+    <button id="spin">SPIN!</button>
   </div>
+  <p id="result"></p>
+
   <script src="script.js"></script>
 </body>
 </html>
