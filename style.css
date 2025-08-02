@@ -1,0 +1,55 @@
+<title>Roda Kejutan Si Lapar</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Roda Kejutan Dimsum</h1>
+    <form id="userForm">
+      <input type="text" id="name" placeholder="Nama Anda" required />
+      <input type="tel" id="phone" placeholder="Nomor HP" required />
+      <button type="submit">Mulai</button>
+    </form>
+    <div id="wheelSection" style="display:none;">
+      <canvas id="wheelCanvas" width="500" height="500"></canvas>
+      <button id="spinButton">Putar Roda</button>
+      <p id="result"></p>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+```
+
+*CSS (style.css):*
+
+```css
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #fff8f0;
+}
+
+.container {
+  margin-top: 50px;
+}
+
+input {
+  padding: 10px;
+  margin: 5px;
+  width: 200px;
+}
+
+button {
+  padding: 10px 20px;
+  margin: 10px;
+  background-color: #ffcc00;
+  border: none;
+  cursor: pointer;
+}
+
+#result {
+  font-size: 1.5em;
+  margin-top: 20px;
+}
+```
+
