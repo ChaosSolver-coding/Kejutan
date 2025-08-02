@@ -1,12 +1,4 @@
-[2/8, 18.31] Owner Rahmadani: const randomIndex = Math.floor(Math.random() * segments.length);
-  document.getElementById('result').textContent = `Selamat! Anda mendapatkan: ${segments[randomIndex]}`;
-});
-```
-
----
-
-Silakan sesuaikan tampilan dan hadiah sesuai dengan kebutuhan kedai dimsum Anda. Jika Anda memerlukan bantuan lebih lanjut atau ingin menambahkan fitur tambahan, jangan ragu untuk bertanya!
-[2/8, 19.05] Mau Makan Dimsum: ```javascript
+```javascript
 document.getElementById('userForm').addEventListener('submit', function(e) {
   e.preventDefault();
   const name = document.getElementById('name').value;
@@ -50,9 +42,7 @@ function drawWheel() {
 
 drawWheel();
 
-document.getElementById('spinButton').addEventListener('click', function() {
-const randomIndex = Math.floor(Math.random() * segments.length);
+document.getElementById('spinButton').addEventListener('click', function() {const randomIndex = Math.floor(Math.random() * segments.length);
   document.getElementById('result').textContent = `Selamat! Anda mendapatkan: ${segments[randomIndex]}`;
 });
 ```
-
