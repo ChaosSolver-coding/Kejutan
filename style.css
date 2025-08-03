@@ -1,79 +1,70 @@
 body {
-  font-family: sans-serif;
+  font-family: Arial, sans-serif;
+  background: #fff6e9;
   text-align: center;
-  background: #fff7e6;
   padding: 20px;
-}
-
-h1 {
-  margin-bottom: 10px;
-}
-
-.arrow {
-  width: 0; 
-  height: 0; 
-  border-left: 15px solid transparent;
-  border-right: 15px solid transparent;
-  border-bottom: 20px solid #000;
-  margin: 0 auto -20px auto;
-  position: relative;
-  z-index: 10;
 }
 
 .wheel-container {
   position: relative;
-  margin: 0 auto;
-  width: 300px;
-  height: 300px;
+  display: inline-block;
+  margin: 20px auto;
+}
+
+canvas {
   border-radius: 50%;
-  border: 5px solid orange;
-  overflow: hidden;
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  border: 8px solid orange;
+  transform: rotate(0deg);
 }
 
-#nama, #hp {
-  margin: 10px auto;
-  padding: 10px;
-  width: 80%;
-  max-width: 300px;
-  font-size: 16px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-button {
-  background: #ccc;
-  border: none;
-  padding: 10px 20px;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-button:disabled {
-  background-color: #999;
-  cursor: not-allowed;
+.arrow {
+  position: absolute;
+  top: 180px;
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg);
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 30px solid black;
+  z-index: 5;
 }
 
 .si-lapar {
-  width: 80px;
-  margin: 15px auto;
-  animation: bounce 1s infinite;
+  width: 60px;
+  height: auto;
+  margin: 20px auto;
+  display: block;
 }
 
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+.input-form {
+  margin-top: 10px;
+}
+
+.input-form input {
+  padding: 10px;
+  margin: 5px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px 25px;
+  font-size: 18px;
+  margin-top: 10px;
+  cursor: pointer;
 }
 
 #result {
   margin-top: 20px;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
 }
 
-#winnersList {
+.daftar-pemenang {
+  margin-top: 30px;
+}
+
+.daftar-pemenang ul {
   list-style-type: none;
   padding: 0;
-  font-size: 14px;
 }
