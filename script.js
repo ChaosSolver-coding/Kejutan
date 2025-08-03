@@ -7,10 +7,10 @@ const namaInput = document.getElementById("nama");
 const hpInput = document.getElementById("hp");
 
 const segments = [
-  "Dimsum Gratis",
-  "Minum Gratis",
-  "Voucher 10%",
-  "Voucher 20%",
+  "1pcs Dimsum Gratis",
+  "Es Teh Gratis",
+  "Diskon Rp 2000",
+  "Komik Story",
   "Hadiah Misteri",
   "Coba Lagi"
 ];
