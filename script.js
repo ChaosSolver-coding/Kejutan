@@ -1,107 +1,93 @@
+const spinBtn = document.getElementById("spinBtn");
 const wheel = document.getElementById("wheel");
-const spinBtn = document.getElementById("spin");
-const siLapar = document.getElementById("siLapar");
-const resultEl = document.getElementById("result");
-const listPemenang = document.getElementById("listPemenang");
-const namaInput = document.getElementById("nama");
-const hpInput = document.getElementById("hp");
+const ctx = wheel.getContext("2d");
+const result = document.getElementById("result");
+const winnersList = document.getElementById("winnersList");
 
-const segments = [
+const prizes = [
   "1pcs Dimsum Gratis",
-  "Es Teh Gratis",
-  "Diskon Rp 2000",
-  "Komik Story",
+  "Coba Lagi",
   "Hadiah Misteri",
-  "Coba Lagi"
+  "Komik Story",
+  "Diskon Rp 2000",
+  "Es Teh Gratis"
 ];
 
-const colors = ["#ffccbc", "#ffe0b2", "#dcedc8", "#b2dfdb", "#d1c4e9", "#f8bbd0"];
-const segAngle = 360 / segments.length;
+const colors = ["#ffe0b2", "#ffcccb", "#d1c4e9", "#b2dfdb", "#f0f4c3", "#ffe0b2"];
 
-// Cek spin sebelumnya
-if (localStorage.getItem("sudahSpin")) {
-  spinBtn.disabled = true;
-  spinBtn.textContent = "SUDAH SPIN";
-}
-
-// Gambar roda
 function drawWheel() {
-  const ctx = wheel.getContext("2d");
-  for (let i = 0; i < segments.length; i++) {
-    const angle = i * segAngle * Math.PI / 180;
+  const angle = (2 * Math.PI) / prizes.length;
+  for (let i = 0; i < prizes.length; i++) {
     ctx.beginPath();
-    ctx.moveTo(200, 200);
-    ctx.arc(200, 200, 200, angle, angle + segAngle * Math.PI / 180);
+    ctx.moveTo(150, 150);
     ctx.fillStyle = colors[i];
+    ctx.arc(150, 150, 150, i * angle, (i + 1) * angle);
     ctx.fill();
     ctx.save();
-    ctx.translate(200, 200);
-    ctx.rotate(angle + segAngle * Math.PI / 360);
-    ctx.textAlign = "right";
+    ctx.translate(150, 150);
+    ctx.rotate(i * angle + angle / 2);
     ctx.fillStyle = "#000";
-    ctx.font = "bold 16px sans-serif";
-    ctx.fillText(segments[i], 180, 10);
+    ctx.font = "14px sans-serif";
+    ctx.textAlign = "right";
+    ctx.fillText(prizes[i], 140, 5);
     ctx.restore();
   }
 }
+
 drawWheel();
 
-// Animasi Si Lapar
-function animateSiLapar() {
-  siLapar.style.transform = "scale(1.5)";
-  setTimeout(() => {
-    siLapar.style.transform = "scale(1)";
-  }, 500);
-}
+let spinning = false;
 
-// Proses Spin
 spinBtn.addEventListener("click", () => {
-  const nama = namaInput.value.trim();
-  const hp = hpInput.value.trim();
+  const nama = document.getElementById("nama").value.trim();
+  const hp = document.getElementById("hp").value.trim();
 
   if (!nama || !hp) {
-    alert("Isi nama dan nomor HP dulu ya!");
+    alert("Isi nama dan nomor HP terlebih dahulu!");
     return;
   }
 
-  const selected = Math.floor(Math.random() * segments.length);
-  const stopAngle = 360 * 5 + (360 - selected * segAngle - segAngle / 2);
+  if (localStorage.getItem("sudahSpin") === "true") {
+    alert("Kamu sudah spin hari ini!");
+    return;
+  }
 
-  wheel.style.transition = "transform 4s ease-out";
-  wheel.style.transform = `rotate(${stopAngle}deg)`;
+  localStorage.setItem("sudahSpin", "true");
+  localStorage.setItem("nama", nama);
+  localStorage.setItem("hp", hp);
 
-  animateSiLapar();
+  spinBtn.disabled = true;
+  spinning = true;
 
-  setTimeout(() => {
-    const hadiah = segments[selected];
-    resultEl.textContent = `🎁 Selamat ${nama}, kamu mendapatkan: ${hadiah}!`;
+  const spinAngle = Math.floor(3600 + Math.random() * 360);
+  const duration = 5000;
 
-    // Simpan ke localStorage
-    localStorage.setItem("sudahSpin", "true");
-    spinBtn.disabled = true;
-    spinBtn.textContent = "SUDAH SPIN";
+  let start = null;
+  function rotate(timestamp) {
+    if (!start) start = timestamp;
+    const progress = timestamp - start;
+    const angle = (spinAngle * Math.min(progress / duration, 1)) % 360;
+    wheel.style.transform = `rotate(${angle}deg)`;
 
-    const pemenang = `${nama} (${hp}) - ${hadiah}`;
-    simpanPemenang(pemenang);
-    tampilkanPemenang();
-  }, 4500);
+    if (progress < duration) {
+      requestAnimationFrame(rotate);
+    } else {
+      const degrees = (spinAngle % 360);
+      const segmentAngle = 360 / prizes.length;
+      const index = Math.floor(((360 - degrees + segmentAngle / 2) % 360) / segmentAngle);
+      const hadiah = prizes[index];
+
+      result.textContent = `Selamat! Kamu mendapatkan: ${hadiah}`;
+      addWinner(nama, hp, hadiah);
+      // Kirim ke Google Sheet + WhatsApp (opsional)
+    }
+  }
+
+  requestAnimationFrame(rotate);
 });
 
-// Simpan data pemenang ke localStorage
-function simpanPemenang(data) {
-  let list = JSON.parse(localStorage.getItem("listPemenang")) || [];
-  list.push(data);
-  localStorage.setItem("listPemenang", JSON.stringify(list));
+function addWinner(nama, hp, hadiah) {
+  const li = document.createElement("li");
+  li.textContent = `${nama} (${hp}) - ${hadiah}`;
+  winnersList.prepend(li);
 }
-
-function tampilkanPemenang() {
-  listPemenang.innerHTML = "";
-  const list = JSON.parse(localStorage.getItem("listPemenang")) || [];
-  list.forEach(p => {
-    const li = document.createElement("li");
-    li.textContent = p;
-    listPemenang.appendChild(li);
-  });
-}
-
-tampilkanPemenang(); // Panggil saat awal halaman dibuka
