@@ -3,32 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Putar Roda Hadiah!</title>
-  <link rel="stylesheet" href="style.css"/>
+  <title>Spin Hadiah - Si Lapar</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <h1>Putar Roda Hadiah!</h1>
 
-  <!-- Panah Penunjuk -->
-  <div class="arrow"></div>
-
-  <!-- Roda -->
   <div class="wheel-container">
-    <canvas id="wheel" width="300" height="300"></canvas>
+    <div class="arrow"></div> <!-- Panah menunjuk ke bawah -->
+    <canvas id="wheel" width="400" height="400"></canvas>
+
+    <img src="si-lapar.gif" class="si-lapar" id="siLapar" alt="Si Lapar" />
+    
+    <div class="input-form">
+      <input type="text" id="nama" placeholder="Nama Kamu" required />
+      <input type="text" id="hp" placeholder="Nomor HP" required />
+    </div>
+
+    <button id="spin">SPIN!</button>
   </div>
 
-  <!-- Karakter Si Lapar -->
-  <img src="si-lapar.gif" alt="Si Lapar" class="si-lapar"/>
+  <p id="result"></p>
 
-  <!-- Form Nama & No HP -->
-  <input type="text" id="nama" placeholder="Nama Kamu" />
-  <input type="text" id="hp" placeholder="Nomor HP" />
-  <button id="spinBtn">SUDAH SPIN</button>
-
-  <!-- Hasil dan Daftar Pemenang -->
-  <div id="result"></div>
-  <h3>Daftar Pemenang:</h3>
-  <ul id="winnersList"></ul>
+  <div class="daftar-pemenang">
+    <h2>🎉 Daftar Pemenang</h2>
+    <ul id="listPemenang"></ul>
+  </div>
 
   <script src="script.js"></script>
 </body>
