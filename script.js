@@ -6,10 +6,10 @@ const siLapar = document.getElementById("siLapar");
 const listPemenang = document.getElementById("listPemenang");
 
 const hadiah = [
-  "1pcs Dimsum Gratis",
-  "Es Teh Gratis",
-  "Diskon Rp 2000",
-  "Komik Si Lapar",
+  "1pcs Dimsum",
+  "Es Teh",
+  "Diskon 2rb",
+  "Komik Story",
   "Hadiah Misteri",
   "Coba Lagi"
 ];
@@ -56,7 +56,7 @@ function simpanKeLocalStorage(nama, hp) {
 }
 
 function kirimKeWhatsApp(nama, hp, hadiah) {
-  const noWa = "6281234567890"; // Ganti dengan nomor admin
+  const noWa = "6285117279493"; // Ganti dengan nomor admin
   const pesan = `Halo! Saya ${nama} (${hp}) memenangkan: ${hadiah}`;
   window.open(`https://wa.me/${noWa}?text=${encodeURIComponent(pesan)}`, "_blank");
 }
@@ -96,7 +96,7 @@ spinBtn.addEventListener("click", () => {
     if (currentRotation >= spinAngle) {
       clearInterval(interval);
       const hadiahDidapat = hadiah[hadiahIndex];
-      result.textContent = `🎉 Selamat! Kamu mendapatkan: ${hadiahDidapat}`;
+      result.textContent = `🎉 Selamat! Kamu mendapat: ${hadiahDidapat}`;
       simpanKeLocalStorage(nama, hp);
       tampilkanPemenang(nama, hadiahDidapat);
       kirimKeWhatsApp(nama, hp, hadiahDidapat);
