@@ -1,70 +1,67 @@
 body {
-  font-family: Arial, sans-serif;
-  background: #fff6e9;
+  font-family: 'Arial', sans-serif;
+  background: #ffeee2;
   text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
   padding: 20px;
+}
+
+.title {
+  font-size: 28px;
+  margin-bottom: 20px;
 }
 
 .wheel-container {
   position: relative;
-  display: inline-block;
-  margin: 20px auto;
+  width: 500px;
+  height: 500px;
+  margin: 0 auto;
 }
 
-canvas {
+canvas#wheel {
+  border: 10px solid orange;
   border-radius: 50%;
-  border: 8px solid orange;
-  transform: rotate(0deg);
 }
 
 .arrow {
   position: absolute;
-  top: 180px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%) rotate(180deg);
-  width: 0;
-  height: 0;
+  width: 0; 
+  height: 0; 
   border-left: 20px solid transparent;
   border-right: 20px solid transparent;
-  border-top: 30px solid black;
-  z-index: 5;
+  border-bottom: 30px solid black;
+  transform: translate(-50%, -250px);
 }
 
-.si-lapar {
-  width: 60px;
-  height: auto;
-  margin: 20px auto;
-  display: block;
-}
-
-.input-form {
+.si-lapar-img {
+  width: 100px;
   margin-top: 10px;
 }
 
-.input-form input {
+form {
+  margin-top: 20px;
+}
+
+input, button {
+  display: block;
+  margin: 10px auto;
   padding: 10px;
-  margin: 5px;
   font-size: 16px;
+  width: 250px;
 }
 
 button {
-  padding: 10px 25px;
-  font-size: 18px;
-  margin-top: 10px;
+  background-color: #eee;
   cursor: pointer;
 }
 
-#result {
-  margin-top: 20px;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.daftar-pemenang {
-  margin-top: 30px;
-}
-
-.daftar-pemenang ul {
+ul#winnersList {
   list-style-type: none;
   padding: 0;
-}
+}p
