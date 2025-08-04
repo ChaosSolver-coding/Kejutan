@@ -103,11 +103,17 @@
     <ul id="winnerList"></ul>
   </div>
 
+  <!-- Suara putaran dan musik latar -->
+  <audio id="spinSound" src="spin_sound.mp3" preload="auto"></audio>
+  <audio id="bgMusic" src="comedy2.mp3" loop autoplay></audio>
+
   <script>
     const wheel = document.getElementById("wheel");
     const ctx = wheel.getContext("2d");
     const spinBtn = document.getElementById("spinBtn");
     const winnerList = document.getElementById("winnerList");
+    const spinSound = document.getElementById("spinSound");
+    const bgMusic = document.getElementById("bgMusic");
 
     const segments = ["1 Pcs Dimsum", "Es Teh Gratis", "Diskon 2 Ribu", "Komik Si Lapar", "Hadiah Misteri", "Coba Lagi"];
     const colors = ["#fbd786", "#f7797d", "#f6f578", "#a1c4fd", "#c2b0f9", "#ffb3ba"];
@@ -148,6 +154,9 @@
         return;
       }
 
+      // Mainkan suara putaran
+      spinSound.play();
+
       isSpinning = true;
       spinBtn.disabled = true;
 
@@ -174,6 +183,11 @@
     }
 
     spinBtn.addEventListener("click", spinWheel);
+
+    // Fungsi untuk pause musik latar
+    function pauseMusic() {
+      bgMusic.pause();
+    }
   </script>
 </body>
 </html>
