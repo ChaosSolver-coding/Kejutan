@@ -50,6 +50,13 @@ function spinWheel(name, phone) {
   const randomAngle = Math.floor(3600 + Math.random() * 360);
   const duration = 4000;
   const start = performance.now();
+  // Tampilkan popup alert
+document.getElementById("popupAlert").classList.remove("hidden");
+
+// Tutup popup ketika tombol OK ditekan
+document.getElementById("closePopup").addEventListener("click", function () {
+  document.getElementById("popupAlert").classList.add("hidden");
+});
 
   function animateSpin(now) {
     const elapsed = now - start;
