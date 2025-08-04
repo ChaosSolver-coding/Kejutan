@@ -3,204 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Roda Keberuntunganmu</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      background: #ffeede;
-      font-family: 'Fredoka', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
-
-    h1 {
-      color: #d35400;
-      text-align: center;
-    }
-
-    .wheel-container {
-      position: relative;
-      width: 300px;
-      height: 300px;
-    }
-
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
-    }
-
-    #pointer {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 60px;
-      height: 60px;
-      transform: translate(-50%, -50%);
-      z-index: 2;
-    }
-
-    .form {
-      margin-top: 330px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      width: 90%;
-      max-width: 400px;
-    }
-
-    .form input, .form button {
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-
-    .form button {
-      background-color: orange;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-
-    #winners {
-      margin-top: 20px;
-      background: white;
-      border-radius: 10px;
-      padding: 10px;
-      width: 90%;
-      max-width: 400px;
-      text-align: left;
-    }
-
-    #winners h2 {
-      margin-top: 0;
-    }
-
-    #bgMusicControl {
-      margin-top: 15px;
-      font-size: 14px;
-      color: #555;
-    }
-  </style>
+  <title>Spin Dimsum</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>RODA KEBERUNTUNGANMU</h1>
+  <div class="container">
+    <div class="wheel-container">
+      <img src="logo.png" id="logoPointer" class="logo-pointer" />
+      <canvas id="wheelCanvas" width="300" height="300"></canvas>
+    </div>
 
-  <div class="wheel-container">
-    <canvas id="wheel" width="300" height="300"></canvas>
-    <img id="pointer" src="Logo2.png" alt="logo dimsum" />
+    <form id="spinForm">
+      <input type="text" id="nameInput" placeholder="Nama" required />
+      <input type="text" id="phoneInput" placeholder="Nomor HP" required />
+      <button type="submit" id="spinButton">SPIN!</button>
+    </form>
+
+    <button id="pauseMusic">Pause Musik</button>
+
+    <div class="winner-list">
+      <h2>Daftar Pemenang:</h2>
+      <ul id="winnerList"></ul>
+    </div>
   </div>
 
-  <div class="form">
-    <input type="text" id="name" placeholder="Nama Kamu" />
-    <input type="tel" id="phone" placeholder="Nomor HP" />
-    <button id="spinBtn">SPIN!</button>
-    <button id="bgMusicControl">Mainkan Musik</button>
-  </div>
+  <!-- Suara -->
+  <audio id="spinSound" src="spin.mp3" preload="auto"></audio>
+  <audio id="bgMusic" src="comedy2.mp3" preload="auto" loop muted></audio>
 
-  <div id="winners">
-    <h2>Daftar Pemenang:</h2>
-    <ul id="winnerList"></ul>
-  </div>
-
-  <!-- Audio -->
-  <audio id="bgMusic" src="comedy2.mp3" preload="auto" loop></audio>
-
-  <script>
-    const canvas = document.getElementById("wheel");
-    const ctx = canvas.getContext("2d");
-    const spinBtn = document.getElementById("spinBtn");
-    const winnerList = document.getElementById("winnerList");
-    const spinSound = document.getElementById("spinSound");
-    const bgMusic = document.getElementById("bgMusic");
-    const bgMusicControl = document.getElementById("bgMusicControl");
-
-    const segments = ["1 Pcs Dimsum", "Es Teh Gratis", "Diskon 2 Ribu", "Komik Si Lapar", "Hadiah Misteri", "Coba Lagi"];
-    const colors = ["#fbd786", "#f7797d", "#f6f578", "#a1c4fd", "#c2b0f9", "#ffb3ba"];
-    const segmentAngle = 360 / segments.length;
-
-    let isSpinning = false;
-    let hasSpun = false;
-    let currentRotation = 0;
-
-    function drawWheel() {
-      for (let i = 0; i < segments.length; i++) {
-        const startAngle = (segmentAngle * i) * Math.PI / 180;
-        const endAngle = (segmentAngle * (i + 1)) * Math.PI / 180;
-
-        ctx.beginPath();
-        ctx.moveTo(150, 150);
-        ctx.arc(150, 150, 150, startAngle, endAngle);
-        ctx.fillStyle = colors[i];
-        ctx.fill();
-
-        // Text
-        ctx.save();
-        ctx.translate(150, 150);
-        ctx.rotate((startAngle + endAngle) / 2);
-        ctx.fillStyle = "#000";
-        ctx.font = "14px Fredoka";
-        ctx.textAlign = "right";
-        ctx.fillText(segments[i], 140, 5);
-        ctx.restore();
-      }
-    }
-
-    drawWheel();
-
-    function spinWheel() {
-      if (isSpinning || hasSpun) return;
-
-      const name = document.getElementById("name").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      if (!name || !phone) {
-        alert("Isi nama dan no HP kamu dulu!");
-        return;
-      }
-
-      isSpinning = true;
-      spinBtn.disabled = true;
-
-      const randomIndex = Math.floor(Math.random() * segments.length);
-      const extraRotation = 360 * 5;
-      const targetRotation = extraRotation + (360 - randomIndex * segmentAngle) - (segmentAngle / 2);
-
-      spinSound.play();
-      canvas.style.transition = "transform 4s ease-out";
-      canvas.style.transform = `rotate(${targetRotation + currentRotation}deg)`;
-      currentRotation += targetRotation;
-
-      setTimeout(() => {
-        spinSound.pause();
-        spinSound.currentTime = 0;
-
-        const result = segments[randomIndex];
-        const li = document.createElement("li");
-        li.textContent = `${name} (${phone}): ${result}`;
-        winnerList.appendChild(li);
-        localStorage.setItem(phone, result);
-
-        hasSpun = true;
-        isSpinning = false;
-      }, 4000);
-    }
-
-    spinBtn.addEventListener("click", spinWheel);
-
-    // Background Music Control
-    bgMusicControl.addEventListener("click", () => {
-      if (bgMusic.paused) {
-        bgMusic.play();
-        bgMusicControl.textContent = "Pause Musik";
-      } else {
-        bgMusic.pause();
-        bgMusicControl.textContent = "Mainkan Musik";
-      }
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
