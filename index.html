@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Roda Dimsum</title>
+  <title>Roda Keberuntunganmu</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap" rel="stylesheet">
   <style>
     body {
@@ -12,11 +12,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
       padding: 20px;
     }
+
     h1 {
       color: #d35400;
+      text-align: center;
     }
 
     .wheel-container {
@@ -26,12 +27,13 @@
     }
 
     canvas {
-      width: 100%;
-      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
       z-index: 1;
     }
 
-    .logo-center {
+    #pointer {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -39,19 +41,18 @@
       height: 60px;
       transform: translate(-50%, -50%);
       z-index: 2;
-      border-radius: 50%;
     }
 
     .form {
+      margin-top: 330px;
       display: flex;
       flex-direction: column;
       gap: 10px;
       width: 90%;
       max-width: 400px;
-      margin-top: 20px;
     }
 
-    .form input {
+    .form input, .form button {
       padding: 10px;
       font-size: 16px;
       border-radius: 5px;
@@ -59,12 +60,9 @@
     }
 
     .form button {
-      padding: 10px;
-      font-size: 16px;
       background-color: orange;
       color: white;
       border: none;
-      border-radius: 5px;
       cursor: pointer;
     }
 
@@ -82,21 +80,26 @@
       margin-top: 0;
     }
 
+    #bgMusicControl {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #555;
+    }
   </style>
 </head>
 <body>
-  <audio id="bgMusic" src="sounds/comedy.mp3" loop autoplay></audio>
-  <h1>PUTAR RODA DIMSUM</h1>
+  <h1>RODA KEBERUNTUNGANMU</h1>
 
   <div class="wheel-container">
     <canvas id="wheel" width="300" height="300"></canvas>
-    <img src="Logo2.png" alt="logo dimsum" class="logo-center" />
+    <img id="pointer" src="Logo2.png" alt="logo dimsum" />
   </div>
 
   <div class="form">
-    <input type="text" id="name" placeholder="Nama Kamu">
-    <input type="tel" id="phone" placeholder="Nomor HP">
+    <input type="text" id="name" placeholder="Nama Kamu" />
+    <input type="tel" id="phone" placeholder="Nomor HP" />
     <button id="spinBtn">SPIN!</button>
+    <button id="bgMusicControl">Mainkan Musik</button>
   </div>
 
   <div id="winners">
@@ -104,35 +107,46 @@
     <ul id="winnerList"></ul>
   </div>
 
+  <!-- Audio -->
+  <audio id="spinSound" src="sounds/spin.mp3" preload="auto"></audio>
+  <audio id="bgMusic" src="comedy2.mp3" preload="auto" loop></audio>
+
   <script>
-    const wheel = document.getElementById("wheel");
-    const ctx = wheel.getContext("2d");
+    const canvas = document.getElementById("wheel");
+    const ctx = canvas.getContext("2d");
     const spinBtn = document.getElementById("spinBtn");
     const winnerList = document.getElementById("winnerList");
+    const spinSound = document.getElementById("spinSound");
+    const bgMusic = document.getElementById("bgMusic");
+    const bgMusicControl = document.getElementById("bgMusicControl");
 
     const segments = ["1 Pcs Dimsum", "Es Teh Gratis", "Diskon 2 Ribu", "Komik Si Lapar", "Hadiah Misteri", "Coba Lagi"];
     const colors = ["#fbd786", "#f7797d", "#f6f578", "#a1c4fd", "#c2b0f9", "#ffb3ba"];
-
-    const segmentAngle = 2 * Math.PI / segments.length;
+    const segmentAngle = 360 / segments.length;
 
     let isSpinning = false;
     let hasSpun = false;
-    let rotation = 0;
+    let currentRotation = 0;
 
     function drawWheel() {
       for (let i = 0; i < segments.length; i++) {
+        const startAngle = (segmentAngle * i) * Math.PI / 180;
+        const endAngle = (segmentAngle * (i + 1)) * Math.PI / 180;
+
         ctx.beginPath();
         ctx.moveTo(150, 150);
-        ctx.arc(150, 150, 150, segmentAngle * i, segmentAngle * (i + 1));
+        ctx.arc(150, 150, 150, startAngle, endAngle);
         ctx.fillStyle = colors[i];
         ctx.fill();
+
+        // Text
         ctx.save();
         ctx.translate(150, 150);
-        ctx.rotate(segmentAngle * (i + 0.5));
+        ctx.rotate((startAngle + endAngle) / 2);
         ctx.fillStyle = "#000";
         ctx.font = "14px Fredoka";
         ctx.textAlign = "right";
-        ctx.fillText(segments[i], 120, 5);
+        ctx.fillText(segments[i], 140, 5);
         ctx.restore();
       }
     }
@@ -152,29 +166,42 @@
       isSpinning = true;
       spinBtn.disabled = true;
 
+      const randomIndex = Math.floor(Math.random() * segments.length);
       const extraRotation = 360 * 5;
-      const randomRotation = Math.floor(Math.random() * 360);
-      rotation = extraRotation + randomRotation;
+      const targetRotation = extraRotation + (360 - randomIndex * segmentAngle) - (segmentAngle / 2);
 
-      wheel.style.transition = "transform 4s ease-out";
-      wheel.style.transform = `rotate(${rotation}deg)`;
+      spinSound.play();
+      canvas.style.transition = "transform 4s ease-out";
+      canvas.style.transform = `rotate(${targetRotation + currentRotation}deg)`;
+      currentRotation += targetRotation;
 
       setTimeout(() => {
-        const normalized = (360 - (rotation % 360)) % 360;
-        const resultIndex = Math.floor(normalized / (360 / segments.length));
-        const winner = segments[resultIndex];
+        spinSound.pause();
+        spinSound.currentTime = 0;
 
+        const result = segments[randomIndex];
         const li = document.createElement("li");
-        li.textContent = `${name} (${phone}): ${winner}`;
+        li.textContent = `${name} (${phone}): ${result}`;
         winnerList.appendChild(li);
-
-        localStorage.setItem(phone, winner);
+        localStorage.setItem(phone, result);
 
         hasSpun = true;
+        isSpinning = false;
       }, 4000);
     }
 
     spinBtn.addEventListener("click", spinWheel);
+
+    // Background Music Control
+    bgMusicControl.addEventListener("click", () => {
+      if (bgMusic.paused) {
+        bgMusic.play();
+        bgMusicControl.textContent = "Pause Musik";
+      } else {
+        bgMusic.pause();
+        bgMusicControl.textContent = "Mainkan Musik";
+      }
+    });
   </script>
 </body>
 </html>
