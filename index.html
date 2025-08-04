@@ -1,30 +1,134 @@
-<!DOCTYPE html>
-<html lang="id">
+<!DOCTYPE html><html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Putar Roda Hadiah!</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spin Dimsum</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #ffeee1;
+    }
+    #wheel-container {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin: 30px auto;
+    }
+    canvas {
+      border-radius: 50%;
+    }
+    #logo-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 60px;
+      height: 60px;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 10;
+      animation: spinLogo 4s linear infinite paused;
+    }
+    @keyframes spinLogo {
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    input {
+      padding: 8px;
+      margin: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #ff9800;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1 class="title">Putar Roda Hadiah!</h1>
-    <div class="wheel-container">
-      <canvas id="wheel" width="500" height="500"></canvas>
-      <div class="arrow"></div>
-    </div>
-    <img src="si-lapar.gif" alt="Si Lapar" class="si-lapar.gif" />
-    
-    <form id="spinForm">
-      <input type="text" id="name" placeholder="Nama Kamu" required />
-      <input type="text" id="phone" placeholder="Nomor HP" required />
-      <button type="submit" id="spinBtn">SPIN!</button>
-    </form>
-    
-    <h2>🎉 Daftar Pemenang</h2>
-    <ul id="winnersList"></ul>
+  <div id="wheel-container">
+    <canvas id="wheel" width="300" height="300"></canvas>
+    <img id="logo-center" src="https://i.ibb.co/4gcpP8z/logo.png" alt="Logo" />
   </div>
+  <div>
+    <input type="text" id="name" placeholder="Nama Kamu" />
+    <input type="text" id="phone" placeholder="Nomor HP" />
+    <button onclick="spin()">SPIN!</button>
+  </div>  <script>
+    const canvas = document.getElementById("wheel");
+    const ctx = canvas.getContext("2d");
+    const logo = document.getElementById("logo-center");
 
-  <script src="script.js"></script>
-</body>
+    const options = [
+      "Diskon 2 ribu",
+      "Komik Si Lapar",
+      "Hadiah Misteri",
+      "Coba Lagi",
+      "1 Pcs Dimsum",
+      "Es Teh Gratis"
+    ];
+    const colors = ["#ffff99", "#a6d3f8", "#dabfff", "#ffb3b3", "#ffe0b2", "#ffcc80"];
+    let startAngle = 0;
+    const arc = Math.PI / (options.length / 2);
+
+    function drawWheel() {
+      for (let i = 0; i < options.length; i++) {
+        const angle = startAngle + i * arc;
+        ctx.fillStyle = colors[i];
+        ctx.beginPath();
+        ctx.moveTo(150, 150);
+        ctx.arc(150, 150, 150, angle, angle + arc, false);
+        ctx.lineTo(150, 150);
+        ctx.fill();
+
+        ctx.save();
+        ctx.fillStyle = "#000";
+        ctx.translate(150, 150);
+        ctx.rotate(angle + arc / 2);
+        ctx.fillText(options[i], 80, 10);
+        ctx.restore();
+      }
+    }
+
+    drawWheel();
+
+    let spinning = false;
+    function spin() {
+      if (spinning) return;
+      spinning = true;
+
+      logo.style.animationPlayState = "running";
+
+      const duration = 4000;
+      const spins = Math.floor(Math.random() * 5 + 5);
+      const angle = spins * 360 + Math.floor(Math.random() * 360);
+      let current = 0;
+      const start = Date.now();
+
+      const interval = setInterval(() => {
+        const now = Date.now();
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        current = angle * easeOutCubic(progress);
+        canvas.style.transform = `rotate(${current}deg)`;
+
+        if (progress >= 1) {
+          clearInterval(interval);
+          logo.style.animationPlayState = "paused";
+          spinning = false;
+          const selectedIndex = options.length - Math.floor(((current % 360) / 360) * options.length);
+          const result = options[selectedIndex % options.length];
+          alert("Selamat! Kamu mendapatkan: " + result);
+        }
+      }, 16);
+    }
+
+    function easeOutCubic(t) {
+      return (--t) * t * t + 1;
+    }
+  </script></body>
 </html>
