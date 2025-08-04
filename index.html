@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="id">
+<!DOCTYPE html>
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,15 +10,25 @@
       text-align: center;
       background-color: #ffeee1;
     }
+
+    h1 {
+      font-size: 24px;
+      color: #d35400;
+      margin-top: 30px;
+    }
+
     #wheel-container {
       position: relative;
       width: 300px;
       height: 300px;
-      margin: 30px auto;
+      margin: 20px auto;
     }
+
     canvas {
       border-radius: 50%;
+      transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
     }
+
     #logo-center {
       position: absolute;
       top: 50%;
@@ -29,15 +40,19 @@
       z-index: 10;
       animation: spinLogo 4s linear infinite paused;
     }
+
     @keyframes spinLogo {
       100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
+
     input {
       padding: 8px;
       margin: 5px;
       border-radius: 5px;
       border: 1px solid #ccc;
+      font-size: 14px;
     }
+
     button {
       padding: 10px 20px;
       background-color: #ff9800;
@@ -50,15 +65,25 @@
   </style>
 </head>
 <body>
+
+  <!-- JUDUL -->
+  <h1>RODA KEBERUNTUNGANMU</h1>
+
+  <!-- WHEEL -->
   <div id="wheel-container">
     <canvas id="wheel" width="300" height="300"></canvas>
     <img id="logo-center" src="Logo2.png" alt="Logo" />
   </div>
+
+  <!-- FORM -->
   <div>
     <input type="text" id="name" placeholder="Nama Kamu" />
     <input type="text" id="phone" placeholder="Nomor HP" />
     <button onclick="spin()">SPIN!</button>
-  </div>  <script>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
     const canvas = document.getElementById("wheel");
     const ctx = canvas.getContext("2d");
     const logo = document.getElementById("logo-center");
@@ -71,6 +96,7 @@
       "1 Pcs Dimsum",
       "Es Teh Gratis"
     ];
+
     const colors = ["#ffff99", "#a6d3f8", "#dabfff", "#ffb3b3", "#ffe0b2", "#ffcc80"];
     let startAngle = 0;
     const arc = Math.PI / (options.length / 2);
@@ -97,6 +123,7 @@
     drawWheel();
 
     let spinning = false;
+
     function spin() {
       if (spinning) return;
       spinning = true;
@@ -104,7 +131,7 @@
       logo.style.animationPlayState = "running";
 
       const duration = 4000;
-      const spins = Math.floor(Math.random() * 5 + 5);
+      const spins = Math.floor(Math.random() * 5 + 5); // antara 5–9 putaran
       const angle = spins * 360 + Math.floor(Math.random() * 360);
       let current = 0;
       const start = Date.now();
@@ -130,5 +157,7 @@
     function easeOutCubic(t) {
       return (--t) * t * t + 1;
     }
-  </script></body>
+  </script>
+
+</body>
 </html>
