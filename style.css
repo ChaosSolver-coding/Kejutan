@@ -1,67 +1,66 @@
 body {
-  font-family: 'Arial', sans-serif;
-  background: #ffeee2;
-  text-align: center;
   margin: 0;
-  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background: #ffe5cc;
 }
 
 .container {
-  padding: 20px;
-}
-
-.title {
-  font-size: 28px;
-  margin-bottom: 20px;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 10px;
+  text-align: center;
 }
 
 .wheel-container {
   position: relative;
-  width: 500px;
-  height: 500px;
-  margin: 0 auto;
-}
-
-canvas#wheel {
-  border: 10px solid orange;
-  border-radius: 50%;
-}
-
-.arrow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0; 
-  height: 0; 
-  border-left: 20px solid transparent;
-  border-right: 20px solid transparent;
-  border-bottom: 30px solid black;
-  transform: translate(-50%, -250px);
-}
-
-.si-lapar-img {
-  width: 100px;
-  margin-top: 10px;
-}
-
-form {
   margin-top: 20px;
 }
 
-input, button {
-  display: block;
-  margin: 10px auto;
+#wheelCanvas {
+  border-radius: 50%;
+  background: #fff;
+}
+
+.logo-pointer {
+  width: 60px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  animation: rotate 2s linear infinite paused;
+}
+
+@keyframes rotate {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+form {
+  margin-top: 10px;
+}
+
+input {
   padding: 10px;
-  font-size: 16px;
-  width: 250px;
+  width: 80%;
+  margin: 5px auto;
+  display: block;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
 
 button {
-  background-color: #eee;
+  padding: 12px 25px;
+  background: orange;
+  color: #fff;
+  border: none;
+  margin-top: 10px;
+  border-radius: 8px;
+  font-weight: bold;
   cursor: pointer;
 }
 
-ul#winnersList {
-  list-style-type: none;
+#winnerList {
+  list-style: none;
   padding: 0;
-}p
+}
