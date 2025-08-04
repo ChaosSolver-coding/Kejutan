@@ -1,7 +1,8 @@
-<!DOCTYPE html><html lang="id">
+<!DOCTYPE html>
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Roda Keberuntunganmu</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap" rel="stylesheet">
   <style>
@@ -17,20 +18,30 @@
     h1 {
       color: #d35400;
     }
-    canvas {
+
+    .wheel-container {
       position: relative;
+      width: 300px;
+      height: 300px;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
       z-index: 1;
     }
-    .pointer {
+
+    .logo-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
       width: 60px;
       height: 60px;
-      position: absolute;
-      top: 185px;
-      left: 50%;
-      transform: translateX(-50%);
+      transform: translate(-50%, -50%);
       z-index: 2;
-      animation: none;
+      border-radius: 50%;
     }
+
     .form {
       display: flex;
       flex-direction: column;
@@ -39,12 +50,14 @@
       max-width: 400px;
       margin-top: 20px;
     }
+
     .form input {
       padding: 10px;
       font-size: 16px;
       border-radius: 5px;
       border: 1px solid #ccc;
     }
+
     .form button {
       padding: 10px;
       font-size: 16px;
@@ -54,6 +67,7 @@
       border-radius: 5px;
       cursor: pointer;
     }
+
     #winners {
       margin-top: 20px;
       background: white;
@@ -63,29 +77,35 @@
       max-width: 400px;
       text-align: left;
     }
+
     #winners h2 {
       margin-top: 0;
     }
-    @keyframes rotate {
-      from { transform: translateX(-50%) rotate(0deg); }
-      to { transform: translateX(-50%) rotate(360deg); }
-    }
+
   </style>
 </head>
 <body>
   <h1>RODA KEBERUNTUNGANMU</h1>
-  <canvas id="wheel" width="300" height="300"></canvas>
-  <img id="pointer" class="pointer" src="Logo2.png" alt="logo dimsum">  <div class="form">
+
+  <div class="wheel-container">
+    <canvas id="wheel" width="300" height="300"></canvas>
+    <img src="Logo2.png" alt="logo dimsum" class="logo-center" />
+  </div>
+
+  <div class="form">
     <input type="text" id="name" placeholder="Nama Kamu">
     <input type="tel" id="phone" placeholder="Nomor HP">
     <button id="spinBtn">SPIN!</button>
-  </div>  <div id="winners">
+  </div>
+
+  <div id="winners">
     <h2>Daftar Pemenang:</h2>
     <ul id="winnerList"></ul>
-  </div>  <script>
+  </div>
+
+  <script>
     const wheel = document.getElementById("wheel");
     const ctx = wheel.getContext("2d");
-    const pointer = document.getElementById("pointer");
     const spinBtn = document.getElementById("spinBtn");
     const winnerList = document.getElementById("winnerList");
 
@@ -96,6 +116,7 @@
 
     let isSpinning = false;
     let hasSpun = false;
+    let rotation = 0;
 
     function drawWheel() {
       for (let i = 0; i < segments.length; i++) {
@@ -130,16 +151,16 @@
       isSpinning = true;
       spinBtn.disabled = true;
 
-      const rotation = 360 * 5 + Math.floor(Math.random() * 360);
-      const resultIndex = Math.floor(((360 - (rotation % 360)) % 360) / (360 / segments.length));
+      const extraRotation = 360 * 5;
+      const randomRotation = Math.floor(Math.random() * 360);
+      rotation = extraRotation + randomRotation;
 
       wheel.style.transition = "transform 4s ease-out";
       wheel.style.transform = `rotate(${rotation}deg)`;
 
-      pointer.style.animation = "rotate 0.7s linear infinite";
-
       setTimeout(() => {
-        pointer.style.animation = "none";
+        const normalized = (360 - (rotation % 360)) % 360;
+        const resultIndex = Math.floor(normalized / (360 / segments.length));
         const winner = segments[resultIndex];
 
         const li = document.createElement("li");
@@ -153,5 +174,6 @@
     }
 
     spinBtn.addEventListener("click", spinWheel);
-  </script></body>
+  </script>
+</body>
 </html>
