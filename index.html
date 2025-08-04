@@ -1,163 +1,157 @@
-<!DOCTYPE html>
-<html lang="id">
+<!DOCTYPE html><html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Spin Dimsum</title>
+  <title>Roda Keberuntunganmu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #ffeee1;
+      background: #ffeede;
+      font-family: 'Fredoka', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px;
     }
-
     h1 {
-      font-size: 24px;
       color: #d35400;
-      margin-top: 30px;
     }
-
-    #wheel-container {
-      position: relative;
-      width: 300px;
-      height: 300px;
-      margin: 20px auto;
-    }
-
     canvas {
-      border-radius: 50%;
-      transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+      position: relative;
+      z-index: 1;
     }
-
-    #logo-center {
-      position: absolute;
-      top: 50%;
-      left: 50%;
+    .pointer {
       width: 60px;
       height: 60px;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      z-index: 10;
-      animation: spinLogo 4s linear infinite paused;
+      position: absolute;
+      top: 185px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      animation: none;
     }
-
-    @keyframes spinLogo {
-      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 90%;
+      max-width: 400px;
+      margin-top: 20px;
     }
-
-    input {
-      padding: 8px;
-      margin: 5px;
+    .form input {
+      padding: 10px;
+      font-size: 16px;
       border-radius: 5px;
       border: 1px solid #ccc;
-      font-size: 14px;
     }
-
-    button {
-      padding: 10px 20px;
-      background-color: #ff9800;
+    .form button {
+      padding: 10px;
+      font-size: 16px;
+      background-color: orange;
+      color: white;
       border: none;
       border-radius: 5px;
-      color: white;
-      font-size: 16px;
       cursor: pointer;
+    }
+    #winners {
+      margin-top: 20px;
+      background: white;
+      border-radius: 10px;
+      padding: 10px;
+      width: 90%;
+      max-width: 400px;
+      text-align: left;
+    }
+    #winners h2 {
+      margin-top: 0;
+    }
+    @keyframes rotate {
+      from { transform: translateX(-50%) rotate(0deg); }
+      to { transform: translateX(-50%) rotate(360deg); }
     }
   </style>
 </head>
 <body>
-
-  <!-- JUDUL -->
   <h1>RODA KEBERUNTUNGANMU</h1>
+  <canvas id="wheel" width="300" height="300"></canvas>
+  <img id="pointer" class="pointer" src="logo-dimsum.png" alt="logo dimsum">  <div class="form">
+    <input type="text" id="name" placeholder="Nama Kamu">
+    <input type="tel" id="phone" placeholder="Nomor HP">
+    <button id="spinBtn">SPIN!</button>
+  </div>  <div id="winners">
+    <h2>Daftar Pemenang:</h2>
+    <ul id="winnerList"></ul>
+  </div>  <script>
+    const wheel = document.getElementById("wheel");
+    const ctx = wheel.getContext("2d");
+    const pointer = document.getElementById("pointer");
+    const spinBtn = document.getElementById("spinBtn");
+    const winnerList = document.getElementById("winnerList");
 
-  <!-- WHEEL -->
-  <div id="wheel-container">
-    <canvas id="wheel" width="300" height="300"></canvas>
-    <img id="logo-center" src="Logo2.png" alt="Logo" />
-  </div>
+    const segments = ["1 Pcs Dimsum", "Es Teh Gratis", "Diskon 2 Ribu", "Komik Si Lapar", "Hadiah Misteri", "Coba Lagi"];
+    const colors = ["#fbd786", "#f7797d", "#f6f578", "#a1c4fd", "#c2b0f9", "#ffb3ba"];
 
-  <!-- FORM -->
-  <div>
-    <input type="text" id="name" placeholder="Nama Kamu" />
-    <input type="text" id="phone" placeholder="Nomor HP" />
-    <button onclick="spin()">SPIN!</button>
-  </div>
+    const segmentAngle = 2 * Math.PI / segments.length;
 
-  <!-- SCRIPT -->
-  <script>
-    const canvas = document.getElementById("wheel");
-    const ctx = canvas.getContext("2d");
-    const logo = document.getElementById("logo-center");
-
-    const options = [
-      "Diskon 2 ribu",
-      "Komik Si Lapar",
-      "Hadiah Misteri",
-      "Coba Lagi",
-      "1 Pcs Dimsum",
-      "Es Teh Gratis"
-    ];
-
-    const colors = ["#ffff99", "#a6d3f8", "#dabfff", "#ffb3b3", "#ffe0b2", "#ffcc80"];
-    let startAngle = 0;
-    const arc = Math.PI / (options.length / 2);
+    let isSpinning = false;
+    let hasSpun = false;
 
     function drawWheel() {
-      for (let i = 0; i < options.length; i++) {
-        const angle = startAngle + i * arc;
-        ctx.fillStyle = colors[i];
+      for (let i = 0; i < segments.length; i++) {
         ctx.beginPath();
         ctx.moveTo(150, 150);
-        ctx.arc(150, 150, 150, angle, angle + arc, false);
-        ctx.lineTo(150, 150);
+        ctx.arc(150, 150, 150, segmentAngle * i, segmentAngle * (i + 1));
+        ctx.fillStyle = colors[i];
         ctx.fill();
-
         ctx.save();
-        ctx.fillStyle = "#000";
         ctx.translate(150, 150);
-        ctx.rotate(angle + arc / 2);
-        ctx.fillText(options[i], 80, 10);
+        ctx.rotate(segmentAngle * (i + 0.5));
+        ctx.fillStyle = "#000";
+        ctx.font = "14px Fredoka";
+        ctx.textAlign = "right";
+        ctx.fillText(segments[i], 120, 5);
         ctx.restore();
       }
     }
 
     drawWheel();
 
-    let spinning = false;
+    function spinWheel() {
+      if (isSpinning || hasSpun) return;
 
-    function spin() {
-      if (spinning) return;
-      spinning = true;
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      if (!name || !phone) {
+        alert("Isi nama dan no HP kamu dulu!");
+        return;
+      }
 
-      logo.style.animationPlayState = "running";
+      isSpinning = true;
+      spinBtn.disabled = true;
 
-      const duration = 4000;
-      const spins = Math.floor(Math.random() * 5 + 5); // antara 5–9 putaran
-      const angle = spins * 360 + Math.floor(Math.random() * 360);
-      let current = 0;
-      const start = Date.now();
+      const rotation = 360 * 5 + Math.floor(Math.random() * 360);
+      const resultIndex = Math.floor(((360 - (rotation % 360)) % 360) / (360 / segments.length));
 
-      const interval = setInterval(() => {
-        const now = Date.now();
-        const elapsed = now - start;
-        const progress = Math.min(elapsed / duration, 1);
-        current = angle * easeOutCubic(progress);
-        canvas.style.transform = `rotate(${current}deg)`;
+      wheel.style.transition = "transform 4s ease-out";
+      wheel.style.transform = `rotate(${rotation}deg)`;
 
-        if (progress >= 1) {
-          clearInterval(interval);
-          logo.style.animationPlayState = "paused";
-          spinning = false;
-          const selectedIndex = options.length - Math.floor(((current % 360) / 360) * options.length);
-          const result = options[selectedIndex % options.length];
-          alert("Selamat! Kamu mendapatkan: " + result);
-        }
-      }, 16);
+      pointer.style.animation = "rotate 0.7s linear infinite";
+
+      setTimeout(() => {
+        pointer.style.animation = "none";
+        const winner = segments[resultIndex];
+
+        const li = document.createElement("li");
+        li.textContent = `${name} (${phone}): ${winner}`;
+        winnerList.appendChild(li);
+
+        localStorage.setItem(phone, winner);
+
+        hasSpun = true;
+      }, 4000);
     }
 
-    function easeOutCubic(t) {
-      return (--t) * t * t + 1;
-    }
-  </script>
-
-</body>
+    spinBtn.addEventListener("click", spinWheel);
+  </script></body>
 </html>
